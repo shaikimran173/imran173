@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameHub Launcher</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+      color: #fff;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      font-size: 2rem;
+      color: #00f7ff;
+      text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff;
+      animation: glow 2s infinite alternate;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      border-bottom: 2px solid #00f7ff;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    nav a:hover {
+      background: #00f7ff;
+      color: #000;
+      box-shadow: 0 0 15px #00f7ff;
+    }
+    main {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .card {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 15px;
+      width: 280px;
+      border-radius: 10px;
+      text-align: center;
+      border: 1px solid #00f7ff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00f7ff;
+    }
+    .icon {
+      font-size: 50px;
+      margin-bottom: 10px;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      border-top: 2px solid #00f7ff;
+      margin-top: 30px;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #00f7ff, 0 0 20px #00f7ff; }
+      to { text-shadow: 0 0 20px #ff00ff, 0 0 30px #ff00ff; }
+    }
+
+    /* Game Modal */
+    #gameModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #gameArea {
+      background: #000;
+      padding: 20px;
+      border: 2px solid #00f7ff;
+      border-radius: 10px;
+      color: #fff;
+    }
+    .closeBtn {
+      margin-top: 15px;
+      padding: 8px 15px;
+      background: red;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <header>🎮 GameHub Launcher</header>
+
+  <nav>
+    <a href="#"><i class="fas fa-home"></i> Home</a>
+    <a href="#"><i class="fas fa-gamepad"></i> Games</a>
+    <a href="#"><i class="fas fa-trophy"></i> Leaderboard</a>
+    <a href="#"><i class="fas fa-cogs"></i> Settings</a>
+  </nav>
+
+  <main>
+    <div class="card" onclick="startGame('ticTacToe')">
+      <div class="icon"><i class="fas fa-th"></i></div>
+      <h3>Tic Tac Toe</h3>
+      <p>Classic 3x3 board game.</p>
+    </div>
+    <div class="card" onclick="startGame('snake')">
+      <div class="icon"><i class="fas fa-dna"></i></div>
+      <h3>Snake</h3>
+      <p>Eat apples, grow your snake.</p>
+    </div>
+    <div class="card" onclick="startGame('clickTarget')">
+      <div class="icon"><i class="fas fa-bullseye"></i></div>
+      <h3>Click Target</h3>
+      <p>Click circles as fast as you can!</p>
+    </div>
+    <div class="card" onclick="startGame('pong')">
+      <div class="icon"><i class="fas fa-table-tennis"></i></div>
+      <h3>Pong</h3>
+      <p>Old school paddle game.</p>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 GameHub | All Rights Reserved
+  </footer>
+
+  <!-- Game Modal -->
+  <div id="gameModal">
+    <div id="gameArea"></div>
+    <button class="closeBtn" onclick="closeGame()">Close Game</button>
+  </div>
+
+  <script>
+    function startGame(game) {
+      document.getElementById('gameModal').style.display = 'flex';
+      const gameArea = document.getElementById('gameArea');
+      gameArea.innerHTML = '';
+
+      if (game === 'ticTacToe') {
+        gameArea.innerHTML = `<canvas id="tictactoe" width="300" height="300" style="background:#fff"></canvas>`;
+        startTicTacToe();
+      } else if (game === 'snake') {
+        gameArea.innerHTML = `<canvas id="snake" width="300" height="300" style="background:#000"></canvas>`;
+        startSnake();
+      } else if (game === 'clickTarget') {
+        gameArea.innerHTML = `<canvas id="clickTarget" width="300" height="300" style="background:#111"></canvas>`;
+        startClickTarget();
+      } else if (game === 'pong') {
+        gameArea.innerHTML = `<canvas id="pong" width="400" height="300" style="background:#000"></canvas>`;
+        startPong();
+      }
+    }
+    function closeGame() {
+      document.getElementById('gameModal').style.display = 'none';
+    }
+
+    // --- Mini Games ---
+    function startTicTacToe() {
+      const canvas = document.getElementById('tictactoe');
+      const ctx = canvas.getContext('2d');
+      let board = Array(9).fill(null);
+      let currentPlayer = 'X';
+      canvas.addEventListener('click', (e) => {
+        const x = Math.floor(e.offsetX / 100);
+        const y = Math.floor(e.offsetY / 100);
+        const idx = y * 3 + x;
+        if (!board[idx]) {
+          board[idx] = currentPlayer;
+          currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          draw();
+        }
+      });
+      function draw() {
+        ctx.clearRect(0,0,300,300);
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 2;
+        for (let i=1; i<3; i++) {
+          ctx.beginPath();
+          ctx.moveTo(i*100, 0);
+          ctx.lineTo(i*100, 300);
+          ctx.moveTo(0, i*100);
+          ctx.lineTo(300, i*100);
+          ctx.stroke();
+        }
+        board.forEach((cell, i) => {
+          if (cell) {
+            ctx.font = '80px Arial';
+            ctx.fillStyle = "#000";
+            ctx.fillText(cell, (i%3)*100+25, Math.floor(i/3)*100+80);
+          }
+        });
+      }
+      draw();
+    }
+
+    function startSnake() {
+      const canvas = document.getElementById('snake');
+      const ctx = canvas.getContext('2d');
+      let snake = [{x: 150, y: 150}];
+      let dx = 10, dy = 0;
+      let food = {x: 50, y: 50};
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowUp' && dy === 0) {dx = 0; dy = -10;}
+        else if (e.key === 'ArrowDown' && dy === 0) {dx = 0; dy = 10;}
+        else if (e.key === 'ArrowLeft' && dx === 0) {dx = -10; dy = 0;}
+        else if (e.key === 'ArrowRight' && dx === 0) {dx = 10; dy = 0;}
+      });
+      function loop() {
+        const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+        snake.unshift(head);
+        if (head.x === food.x && head.y === food.y) {
+          food.x = Math.floor(Math.random()*30)*10;
+          food.y = Math.floor(Math.random()*30)*10;
+        } else {
+          snake.pop();
+        }
+        if (head.x < 0 || head.x >= 300 || head.y < 0 || head.y >= 300 || snake.slice(1).some(s => s.x===head.x && s.y===head.y)) {
+          alert('Game Over!');
+          return;
+        }
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0,0,300,300);
+        ctx.fillStyle = 'lime';
+        snake.forEach(s => ctx.fillRect(s.x, s.y, 10, 10));
+        ctx.fillStyle = 'red';
+        ctx.fillRect(food.x, food.y, 10, 10);
+        setTimeout(loop, 100);
+      }
+      loop();
+    }
+
+    function startClickTarget() {
+      const canvas = document.getElementById('clickTarget');
+      const ctx = canvas.getContext('2d');
+      let score = 0;
+      let x = Math.random()*250+25;
+      let y = Math.random()*250+25;
+      canvas.addEventListener('click', (e) => {
+        const dist = Math.sqrt((e.offsetX - x)**2 + (e.offsetY - y)**2);
+        if (dist < 20) {
+          score++;
+          x = Math.random()*250+25;
+          y = Math.random()*250+25;
+        }
+      });
+      function draw() {
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0,0,300,300);
+        ctx.fillStyle = 'yellow';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.font = '20px Arial';
+        ctx.fillText('Score: '+score, 10, 20);
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    function startPong() {
+      const canvas = document.getElementById('pong');
+      const ctx = canvas.getContext('2d');
+      let paddleHeight = 60;
+      let paddleY = (canvas.height - paddleHeight)/2;
+      let ballX = canvas.width/2, ballY = canvas.height/2;
+      let ballDX = 2, ballDY = 2;
+      document.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        paddleY = e.clientY - rect.top - paddleHeight/2;
+      });
+      function loop() {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = '#0f0';
+        ctx.fillRect(10, paddleY, 10, paddleHeight);
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, 8, 0, Math.PI*2);
+        ctx.fill();
+        ballX += ballDX;
+        ballY += ballDY;
+        if (ballY < 0 || ballY > canvas.height) ballDY = -ballDY;
+        if (ballX < 20 && ballY > paddleY && ballY < paddleY+paddleHeight) ballDX = -ballDX;
+        if (ballX < 0 || ballX > canvas.width) {
+          ballX = canvas.width/2; ballY = canvas.height/2;
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+  </script>
+
+</body>
+</html>
